@@ -56,7 +56,7 @@ public static class MergeSort
         *  Outputs:
         *     None
         */
-    private static void Merge<T>(List<T> data, int first, int mid, int last) where T : IComparable<T>
+    public static void Merge<T>(List<T> data, int first, int mid, int last) where T : IComparable<T>
     {
         int leftSize = mid - first + 1;
         int rightSize = last - mid;

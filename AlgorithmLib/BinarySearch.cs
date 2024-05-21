@@ -41,15 +41,20 @@ public static class BinarySearch
     */
     public static int _Search<T>(List<T> data, T target, int first, int last) where T : IComparable<T>
     {
+        // Base case.
         if (first > last)
             return -1;
         else
         {
+            // Determine the midpoint (pivot point).
             int mid = (first + last) / 2;
+            // Return the mid.
             if (data[mid].CompareTo(target) == 0)
                 return mid;
+            // Check the right side.
             else if (data[mid].CompareTo(target) > 0)
                 return _Search(data, target, first, mid - 1);
+            // Check the left side.
             else
                 return _Search(data, target, mid + 1, last);
         }

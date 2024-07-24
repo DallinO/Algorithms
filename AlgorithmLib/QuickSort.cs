@@ -61,26 +61,35 @@ public static class QuickSort
      */
     public static int Partition<T>(List<T> data, int first, int last) where T : IComparable<T>
     {
+        // Select the pivot element as the last element in the current range
         T pivot = data[last];
+
+        // Initialize the index i to be one element before the first index
         int i = first - 1;
 
+        // Iterate through the elements from first to last-1
         for (int j = first; j < last; j++)
         {
-            
+            // If the current element is less than or equal to the pivot
             if (data[j].CompareTo(pivot) <= 0)
             {
+                // Increment i to expand the smaller (or equal) element subarray
                 i++;
+
+                // Swap data[i] and data[j] to place smaller elements to the left of the pivot
                 T temp = data[i];
                 data[i] = data[j];
                 data[j] = temp;
             }
         }
 
+        // Place the pivot element (which is currently at data[last]) in its correct position
+        // by swapping it with the element at data[i + 1]
         T temp2 = data[i + 1];
         data[i + 1] = data[last];
         data[last] = temp2;
 
-        return i + 1; 
+        // Return the index of the pivot element after partitioning
+        return i + 1;
     }
-
 }

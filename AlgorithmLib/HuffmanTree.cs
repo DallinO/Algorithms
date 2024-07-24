@@ -8,6 +8,8 @@
 *  Submit this file and the completed HuffmanTree.md file into Canvas.
 */
 
+using System.Text;
+
 namespace AlgorithmLib;
 
 public static class HuffmanTree
@@ -17,10 +19,10 @@ public static class HuffmanTree
     {
         // Letter represented by the node.  Can be blank.
         public char Letter { get; set; }
-        
+
         // Frequency of letters in the sub-tree beginning with this node
         public int Count { get; set; }
-        
+
         // Left and Right sub-trees (can be Null)
         public Node? Left;
         public Node? Right;
@@ -35,11 +37,24 @@ public static class HuffmanTree
      *     Dictionary where key is a character and value is the frequency count
      *     from the text.
      */
-    public static Dictionary<char,int> Profile(String text)
+    public static Dictionary<char, int> Profile(string text)
     {
-        return new Dictionary<char, int>();
+        var profile = new Dictionary<char, int>();
+        foreach (var c in text)
+        {
+            if (profile.ContainsKey(c))
+            {
+                profile[c]++;
+            }
+            else
+            {
+                profile[c] = 1;
+            }
+        }
+        return profile;
     }
-    
+
+
     /* Create a huffman tree for all letters in the profile.  Use
      * a Priority Queue (code already provided) in your implementation.
      *
@@ -50,8 +65,37 @@ public static class HuffmanTree
      */
     public static Node BuildTree(Dictionary<char, int> profile)
     {
-        return new Node();
+        var priorityQueue = new PriorityQueue<Node>();
+
+        // Create initial nodes for each character and add to the priority queue
+        foreach (var entry in profile)
+        {
+            priorityQueue.Insert(new Node { Letter = entry.Key, Count = entry.Value }, entry.Value);
+        }
+
+        // Build the Huffman tree
+        while (priorityQueue.Size() > 1)
+        {
+            // Extract the two nodes with the lowest frequency
+            var left = priorityQueue.Dequeue();
+            var right = priorityQueue.Dequeue();
+
+            // Create a new internal node with these two nodes as children
+            var newNode = new Node
+            {
+                Left = left,
+                Right = right,
+                Count = left.Count + right.Count
+            };
+
+            // Add the new node to the priority queue
+            priorityQueue.Insert(newNode, newNode.Count);
+        }
+
+        // The remaining node is the root of the Huffman tree
+        return priorityQueue.Dequeue();
     }
+
 
     /* Create an encoding map from the huffman tree
      *
@@ -63,9 +107,11 @@ public static class HuffmanTree
      */
     public static Dictionary<char, string> CreateEncodingMap(Node root)
     {
-        return new Dictionary<char, string>();
+        var map = new Dictionary<char, string>();
+        _CreateEncodingMap(root, "", map);
+        return map;
     }
-    
+
     /* Recursively visit each node in the Huffman Tree
      * looking for leaf nodes which contain letters.  Keep
      * track of the huffman code by adding 0 when going left
@@ -78,8 +124,21 @@ public static class HuffmanTree
      *  Outputs:
      *     none
      */
-    public static void _CreateEncodingMap(Node node, string code, Dictionary<char, string> map)
+    private static void _CreateEncodingMap(Node node, string code, Dictionary<char, string> map)
     {
+        if (node == null)
+        {
+            return;
+        }
+
+        // If this node is a leaf, it contains a letter
+        if (node.Left == null && node.Right == null)
+        {
+            map[node.Letter] = code;
+        }
+
+        _CreateEncodingMap(node.Left, code + "0", map);
+        _CreateEncodingMap(node.Right, code + "1", map);
     }
 
     /* Encode a string with the encoding map.
@@ -93,8 +152,14 @@ public static class HuffmanTree
      */
     public static string Encode(string text, Dictionary<char, string> map)
     {
-        return "";
+        var encodedText = new StringBuilder();
+        foreach (var c in text)
+        {
+            encodedText.Append(map[c]);
+        }
+        return encodedText.ToString();
     }
+
 
     /* Decode a string with the huffman tree
      *
@@ -104,8 +169,24 @@ public static class HuffmanTree
      *  Outputs:
      *     decoded text
      */
-    public static string Decode(string text, Node tree)
+    public static string Decode(string text, Node root)
     {
-        return "";
+        var decodedText = new StringBuilder();
+        var currentNode = root;
+
+        foreach (var bit in text)
+        {
+            currentNode = bit == '0' ? currentNode.Left : currentNode.Right;
+
+            // If we reach a leaf node, we have found a letter
+            if (currentNode.Left == null && currentNode.Right == null)
+            {
+                decodedText.Append(currentNode.Letter);
+                currentNode = root; // Start again from the root for the next character
+            }
+        }
+
+        return decodedText.ToString();
     }
+
 }

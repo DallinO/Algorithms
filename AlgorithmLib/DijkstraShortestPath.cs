@@ -8,6 +8,7 @@
 */
 
 using System.Collections.Generic;
+using static AlgorithmLib.ConvexHull;
 
 namespace AlgorithmLib;
 
@@ -100,3 +101,66 @@ public static class DijkstraShortestPath
         return (distance, predecessor);
     } 
 }
+
+
+
+///* Generate a Convex Hull from a list of points.
+//     *
+//     *  Inputs:
+//     *     points - List of points to create hull around
+//     *  Outputs:
+//     *     Return list of points in the hull
+//     *
+//     * NOTE: If no hull exists, then return an empty list.
+//     */
+//public static List<Point> GenerateHull(List<Point> points)
+//{
+//    if (points.Count < 3)
+//        return new List<Point>(); // Return an empty list if less than 3 points
+
+//    // Sort points lexicographically (by x and then by y)
+//    points.Sort((a, b) => a.X == b.X ? a.Y.CompareTo(b.Y) : a.X.CompareTo(b.X));
+
+//    // Helper function to build the hull
+//    List<Point> BuildHull(List<Point> input)
+//    {
+//        int n = input.Count;
+//        if (n <= 1)
+//            return input;
+
+//        // Build lower hull
+//        var lowerHull = new List<Point>();
+//        foreach (var p in input)
+//        {
+//            while (lowerHull.Count >= 2 && Orientation(lowerHull[lowerHull.Count - 2], lowerHull[lowerHull.Count - 1], p) != Angle.Convex)
+//                lowerHull.RemoveAt(lowerHull.Count - 1);
+//            lowerHull.Add(p);
+//        }
+
+//        // Build upper hull
+//        var upperHull = new List<Point>();
+//        for (int i = input.Count - 1; i >= 0; i--)
+//        {
+//            Point p = input[i];
+//            while (upperHull.Count >= 2 && Orientation(upperHull[upperHull.Count - 2], upperHull[upperHull.Count - 1], p) != Angle.Convex)
+//                upperHull.RemoveAt(upperHull.Count - 1);
+//            upperHull.Add(p);
+//        }
+
+//        // Remove the last point of each half because it's repeated at the beginning of the other half
+//        lowerHull.RemoveAt(lowerHull.Count - 1);
+//        upperHull.RemoveAt(upperHull.Count - 1);
+
+//        // Concatenate lower and upper hull to get the full hull
+//        lowerHull.AddRange(upperHull);
+//        return lowerHull;
+//    }
+
+//    // Build and return the hull
+//    var hull = BuildHull(points);
+
+//    // Ensure the hull is closed by adding the first point again at the end
+//    hull.Add(hull[0]);
+
+//    return hull;
+//}

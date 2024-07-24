@@ -14,77 +14,58 @@ namespace AlgorithmLib;
 
 public class RSA
 {
-    /* Recursively use Euclid to find the Greatest Common Divisor between
-     * two numbers as well as the linear combination form.
-     *
-     *  Inputs:
-     *     a - First number
-     *     b - Second number
-     *  Outputs:
-     *     (gcd, i, j) where gcd = i*a + j*b
-     */
-    public static (BigInteger, BigInteger, BigInteger) Euclid(BigInteger a, BigInteger b)
+    // Recursively use Euclid to find the Greatest Common Divisor between two numbers
+    // as well as the linear combination form.
+    public static (BigInteger gcd, BigInteger x, BigInteger y) Euclid(BigInteger a, BigInteger b)
     {
-        return (0,0,0);
+        if (b == 0)
+            return (a, 1, 0);
+
+        (BigInteger gcd, BigInteger x1, BigInteger y1) = Euclid(b, a % b);
+        BigInteger x = y1;
+        BigInteger y = x1 - (a / b) * y1;
+
+        return (gcd, x, y);
     }
 
-    /* Recursively calculates x^y mod n
-     *
-     *  Inputs:
-     *     x - base
-     *     y - exponent
-     *     n - modulo
-     *  Outputs:
-     *     Result of x^y mod n
-     */
+    // Recursively calculates x^y mod n
     public static BigInteger ModularExponentiation(BigInteger x, BigInteger y, BigInteger n)
     {
-        return 0;
+        if (y == 0)
+            return 1;
+
+        BigInteger z = ModularExponentiation(x, y / 2, n);
+        if (y % 2 == 0)
+            return (z * z) % n;
+        else
+            return (x * z * z) % n;
     }
 
-    /* Generate the RSA private key given the two prime numbers p and q and
-     * the public key e which was selected to be co-prime with
-     * r = (p-1) * (q-1).
-     * 
-     *  Inputs:
-     *     p - First prime
-     *     q - Second prime
-     *     e - Public Key 
-     *  Outputs:
-     *     Private Key - Must be positive
-     */
-    public static BigInteger GeneratePrivateKey(BigInteger p, BigInteger q, BigInteger e) 
+    // Generate the RSA private key given the two prime numbers p and q and
+    // the public key e which was selected to be co-prime with r = (p-1) * (q-1).
+    public static BigInteger GeneratePrivateKey(BigInteger p, BigInteger q, BigInteger e)
     {
-        return 0;
+        BigInteger phi = (p - 1) * (q - 1);
+        var (gcd, x, y) = Euclid(e, phi);
+        if (gcd != 1)
+            throw new ArgumentException("e must be co-prime with (p-1)*(q-1)");
+
+        BigInteger d = x % phi;
+        if (d < 0)
+            d += phi;
+
+        return d;
     }
 
-    /* Encrypt a value using the public keys e and n
-     *
-     *  Inputs:
-     *     value - Value to encrypt
-     *     e - Value that was co-prime with (p-1)*(q-1)
-     *     n - Value equal to p*q
-     *  Outputs:
-     *     encrypted value
-     */
+    // Encrypt a value using the public keys e and n
     public static BigInteger Encrypt(BigInteger value, BigInteger e, BigInteger n)
     {
-        return 0;
+        return ModularExponentiation(value, e, n);
     }
 
-    /* Decrypt a value using the public key n and private key d
-     *
-     *  Inputs:
-     *     value - Value to decrypt
-     *     e - Private Key
-     *     n - Value equal to p*q
-     *  Outputs:
-     *     encrypted value
-     */
+    // Decrypt a value using the public key n and private key d
     public static BigInteger Decrypt(BigInteger value, BigInteger d, BigInteger n)
     {
-        return 0;
+        return ModularExponentiation(value, d, n);
     }
-
-
 }

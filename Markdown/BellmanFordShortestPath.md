@@ -28,8 +28,8 @@ During the relaxation step, the algorithm iterates over all edges multiple times
 
 The performance for the shortest path (where $V$ is the number of vertices in the graph and $E$ is the number of edges):
 
-* Worst Case: $O(VE)$
-* Best Case: $\Omega(V)$
+* Worst Case: $O(V + E)$
+* Best Case: $\Omega(V * E)$
 
 ## 4. AI Research (10%)
 

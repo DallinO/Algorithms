@@ -26,7 +26,32 @@ public static class StringMatcher
      */
     public static List<int> Match(string text,  string pattern, List<char> inputs)
     {
-        return new List<int>();
+        List<Dictionary<char, int>> fsm = BuildTable(pattern, inputs);
+        List<int> matches = new List<int>();
+
+        int state = 0;
+        for (int i = 0; i < text.Length; i++)
+        {
+            char c = text[i];
+            if (fsm[state].ContainsKey(c))
+            {
+                state = fsm[state][c];
+                if (state == pattern.Length)
+                {
+                    // Pattern matched ending at position i
+                    matches.Add(i); 
+                    // reset state
+                    state = fsm[state - 1][pattern[state - 1]]; 
+                }
+            }
+            else
+            {
+                // Reset state if character not found in the transitions
+                state = 0; 
+            }
+        }
+
+        return matches;
     }
 
     /* Build the Finite State Machine table for the pattern and list of valid
@@ -43,6 +68,44 @@ public static class StringMatcher
      */
     public static List<Dictionary<char, int>> BuildTable(string pattern, List<char> inputs)
     {
-        return new List<Dictionary<char, int>>();
+        int m = pattern.Length;
+        List<Dictionary<char, int>> fsm = new List<Dictionary<char, int>>();
+
+        // Initialize the FSM with m+1 states
+        for (int i = 0; i <= m; i++)
+        {
+            fsm.Add(new Dictionary<char, int>());
+            foreach (char c in inputs)
+            {
+                // Default state transition
+                fsm[i][c] = 0;
+            }
+        }
+
+        // Build the table
+        // Length of the longest prefix suffix (LPS) - initially 0
+        int lps = 0; 
+        for (int i = 0; i <= m; i++)
+        {
+            // Update transitions for current state based on previous state and current character
+            foreach (char c in inputs)
+            {
+                fsm[i][c] = fsm[lps][c];
+            }
+
+            // If not end of pattern, update the next state for pattern[i]
+            if (i < m)
+            {
+                fsm[i][pattern[i]] = i + 1;
+
+                // Update lps to be used in the next iteration
+                if (i > 0)
+                {
+                    lps = fsm[lps][pattern[i]];
+                }
+            }
+        }
+
+        return fsm;
     }
 }

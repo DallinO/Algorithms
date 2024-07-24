@@ -24,18 +24,20 @@ Relaxing the edges adjacent to a vertex means to update the shortest known dista
 
 The priority queue is designed to facilitate the selection of vertices with the smallest known distances. This enables efficient exploration of the graph and ensures that the shortest paths are found correctly and efficiently. When a vertex is dequeued from the priority queue, it relaxes the edges outgoing from that vertex. If a shorter path to a neighboring vertex is found, the neighboring vertex is enqueued with its updated distance as the priority.
 
+A heuristic function is a problem-solving approach used in various fields like computer science and artificial intelligence when finding an exact solution is either computationally impractical or too time-consuming. These functions provide approximate solutions quickly by leveraging domain-specific knowledge or rules of thumb. Unlike exact methods, heuristics prioritize efficiency over precision, aiming to deliver solutions that are sufficiently good for practical purposes but may not be optimal. They are designed to be computationally efficient, making them suitable for complex problems where exhaustive search or exact computation is infeasible.
+
 
 ## 3. Performance (10%)
 
 The performance for the shortest path (where $V$ is the number of vertices in the graph and $E$ is the number of edges):
 
 * Using an Array:
-    * Worst Case: $O(V * E)$
-    * Best Case: $\Omega(V * E))$
+    * Worst Case: $O(V^2 + E)$
+    * Best Case: $\Omega((V+E) * log(V))$
 
 * Using a Priority Queue:
-    * Worst Case: $O(E * log(V))$
-    * Best Case: $\Omega(E * log(V))$
+    * Worst Case: $O((V+E) * log(V))$
+    * Best Case: $\Omega((V+E) * log(V))$
 
 ## 4. AI Research (10%)
 
@@ -43,4 +45,4 @@ NOTE: Do not copy/paste from the AI.  Describe what you learned in at least 100 
 
 Using an AI, explore the use of the use of the A* algorithm to find the shortest path with road maps and compare it with Dijkstra.
 
-Dijkstra's algorithm guarantees the shortest path but can be slow on large graphs. A* is generally faster but may return suboptimal paths if the heuristic is not accurate. A* is often more efficient than Dijkstra's algorithm, especially on large graphs, due to its ability to guide the search using the heuristic function. However the quality of the heuristic function used in A* greatly influences its performance. Dijkstra's algorithm is more versatile and can handle graphs with varying edge weights without modifications. A* requires a suitable heuristic tailored to the problem.
+Dijkstra's algorithm is renowned for its ability to find the shortest path in graphs with varying edge weights, making it versatile in various scenarios without needing adjustments. However, its performance can lag on large graphs due to its exhaustive nature. In contrast, A* algorithmically enhances efficiency by employing heuristic functions that guide pathfinding towards the goal, offering potential speed gains. Yet, A* relies heavily on the accuracy of these heuristics; inaccurate heuristics can lead to suboptimal path choices. This characteristic demands careful consideration and tailoring of heuristics to specific problem domains to achieve optimal performance gains over Dijkstra's algorithm, particularly noticeable in larger and more complex graph structures.
